@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pendaftaran Anak Baru</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    form {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        width: 300px;
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .error {
+        color: red;
+        font-size: 12px;
+    }
+</style>
+</head>
+<body>
+
+<form id="registrationForm">
+    <h2>Pendaftaran Anak Baru</h2>
+    <input type="text" id="name" placeholder="Nama Lengkap">
+    <div class="error" id="nameError"></div>
+
+    <input type="text" id="class" placeholder="Kelas">
+    <div class="error" id="classError"></div>
+
+    <input type="email" id="email" placeholder="Gmail">
+    <div class="error" id="emailError"></div>
+
+    <input type="text" id="phone" placeholder="NO Telepon">
+    <div class="error" id="phoneError"></div>
+
+    <button type="submit">Kirim</button>
+</form>
+
+<script>
+const form = document.getElementById('registrationForm');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let isValid = true;
+
+    // Reset errors
+    document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+    // Validate Name
+    const name = document.getElementById('name').value.trim();
+    if (name === '') {
+        document.getElementById('nameError').textContent = 'Name is required.';
+        isValid = false;
+    }
+
+    // Validate Class
+    const studentClass = document.getElementById('class').value.trim();
+    if (studentClass === '') {
+        document.getElementById('classError').textContent = 'Class is required.';
+        isValid = false;
+    }
+
+    // Validate Email
+    const email = document.getElementById('email').value.trim();
+    if (!email.match(/^[\w-\.]+@gmail\.com$/)) {
+        document.getElementById('emailError').textContent = 'Valid Gmail address required.';
+        isValid = false;
+    }
+
+    // Validate Phone
+    const phone = document.getElementById('phone').value.trim();
+    if (!phone.match(/^\d+$/)) {
+        document.getElementById('phoneError').textContent = 'Phone must be numbers only.';
+        isValid = false;
+    }
+
+    if (isValid) {
+        // Send data to Google Apps Script
+        fetch("https://script.google.com/macros/s/AKfycbwy-U8KdC6yZKxb7hRqyXoSxmGiCzl2ejO_rB-y-1aj9wK7KQ8gnPi8EvajK_19RzaXPg/exec", {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                class: studentClass,
+                email: email,
+                phone: phone
+            })
+        }).then(() => {
+            alert("Registration successful!");
+            form.reset();
+        }).catch(err => {
+            alert("Error submitting data.");
+            console.error(err);
+        });
+    }
+});
+</script>
+
+</body>
+</html>
