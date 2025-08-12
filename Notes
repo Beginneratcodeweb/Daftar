@@ -1,0 +1,19 @@
+Spreadsheet : https://docs.google.com/spreadsheets/d/113laMuaCe63Mlk0J9bxc2JjK63z0L5pwrqLpblUtaKA/edit?gid=0#gid=0
+App Script : https://script.google.com/u/1/home/projects/1kRhxBPMzlxHKNAf7_bTUhLQIzMJhw7-fLMqak8v1MImGnL-6u4MvZYLl/edit
+Script code :
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+
+  sheet.appendRow([
+    data.name,
+    data.class,
+    data.email,
+    data.phone,
+    new Date()
+  ]);
+
+  return ContentService.createTextOutput(
+    JSON.stringify({ status: 'success' })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
